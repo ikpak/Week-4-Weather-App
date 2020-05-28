@@ -41,12 +41,19 @@ export default class App extends Component {
   }
 
   getCurrentWeather = async(lon, lat) => {
-    let apiKey = process.env.REACT_APP_APIKEY
-    let url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`
+    try {
+      let apiKey = process.env.REACT_APP_APIKEY
+      let url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`
     
-    let data = await fetch(url)
-    let result = await data.json()
-    this.setState({weatherResult: result})
+      let data = await fetch(url)
+
+      if(data.status !== 200) {throw new Error("There is no data")}
+
+      let result = await data.json()
+      this.setState({weatherResult: result})
+    } catch(err) {
+      alert(err.message)
+    }
   }
 
   getLocation  = () => {
